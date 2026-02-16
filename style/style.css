@@ -1,0 +1,9 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+#headline {
+  font-size: 40px;
+  background-color: red;
+}
