@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,6 +23,7 @@
     </script>
     <link rel="stylesheet" href="./style/style.css">
 </head>
+
 <body class="font-sans bg-gray-100">
     <!-- Navbar -->
     <nav class="shadow-md sticky top-0 z-50 bg-white">
@@ -60,46 +62,45 @@
         </div>
     </nav>
 
-        <section class="py-10 bg-gray-100">
+
+    <!-- All Products -->
+    <section class="py-10 bg-gray-100">
         <div class="myContainer">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
-                <h2 class="text-3xl md:text-4xl font-bold text-black">Trending Now</h2>
-            </div>
+            <div class="text-center my-12">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-black mb-6">Our Products</h2>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group">
-                    <div class="bg-gray-300 p-6 relative">
-                        <img class="h-48 w-full object-contain group-hover:scale-105 transition-transform duration-500"
-                            src="https://flowbite.com/docs/images/products/apple-watch.png" alt="Apple Watch">
-                    </div>
+                <div class="flex justify-center">
+                    <div role="tablist"
+                        class="tabs tabs-boxed bg-gray-100 p-1 md:p-2 rounded-full inline-flex overflow-x-auto no-scrollbar max-w-full">
 
-                    <div class="p-5 border-t border-gray-50">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-blue-600 uppercase">Electronics</span>
-                            <div class="flex items-center gap-1">
-                                <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                <span class="text-xs font-bold text-gray-700">4.9 (120)</span>
-                            </div>
-                        </div>
-                        <h3
-                            class="text-gray-800 font-bold mb-4 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                            Apple Watch Series 7</h3>
+                        <button role="tab"
+                            class="tab tab-active px-6 rounded-lg transition-all duration-300 text-sm hover:text-blue-600">
+                            All
+                        </button>
 
-                        <div class="mb-5">
-                            <p class="font-bold text-gray-900">Price: $599</p>
-                        </div>
+                        <button role="tab"
+                            class="tab px-6 rounded-lg font-medium transition-all duration-300 text-sm hover:bg-white/50 whitespace-nowrap">
+                            Electronics
+                        </button>
 
-                        <div class="flex gap-2">
-                            <button
-                                class="flex-1 btn btn-ghost btn-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg">
-                                <i class="fa-regular fa-eye"></i> Details
-                            </button>
-                            <button class="flex-1 btn btn-primary btn-sm rounded-lg text-white">
-                                <i class="fa-solid fa-cart-plus"></i> Add
-                            </button>
-                        </div>
+                        <button role="tab"
+                            class="tab px-6 rounded-lg font-medium transition-all duration-300 text-sm hover:bg-white/50 whitespace-nowrap">
+                            Clothing
+                        </button>
+
+                        <button role="tab"
+                            class="tab px-6 rounded-lg font-medium transition-all duration-300 text-sm hover:bg-white/50 whitespace-nowrap">
+                            Home & Kitchen
+                        </button>
+
                     </div>
                 </div>
+            </div>
+
+            <!-- from js file to load products and show -->
+
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+               
             </div>
         </div>
     </section>
@@ -176,4 +177,5 @@
 
     <script src="./script.js"></script>
 </body>
+
 </html>
