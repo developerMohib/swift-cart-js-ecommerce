@@ -56,3 +56,75 @@ const allProducts = () => {
 }
 
 allProducts();
+
+let globalProducts = [];
+
+const categoryFilter = () => {
+    const url = 'https://fakestoreapi.com/products';
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            globalProducts = data;
+
+            const categories = data.reduce((unique, item) => {
+                if (!unique.includes(item.category)) {
+                    unique.push(item.category);
+                }
+                return unique;
+            }, []);
+
+            const categoryTab = document.getElementById('categoryTab');
+            categoryTab.innerHTML = '';
+            // show all prod initially
+            const allBtn = document.createElement('button');
+            allBtn.role = 'tab';
+            allBtn.className = 'tab tab-active px-6 rounded-lg font-medium transition-all duration-300 text-sm';
+            allBtn.innerText = 'All';
+            // pass parameter to filter 
+            allBtn.onclick = (e) => handleFilter('all', e.target);
+            categoryTab.appendChild(allBtn);
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.role = 'tab';
+                btn.className = 'tab px-6 rounded-lg font-medium transition-all duration-300 text-sm hover:bg-white/50 whitespace-nowrap capitalize';
+                btn.innerText = cat;
+                btn.onclick = (e) => handleFilter(cat, e.target);
+                categoryTab.appendChild(btn);
+            });
+            // call to show all products initially
+            displayProducts(data);
+        })
+        .catch(err => console.log(err));
+}
+
+const handleFilter = (category, targetElement) => {
+    const allTabs = document.querySelectorAll('#categoryTab .tab');
+    allTabs.forEach(tab => tab.classList.remove('tab-active'));
+    targetElement.classList.add('tab-active');
+
+    if (category === 'all') {
+        displayProducts(globalProducts);
+    } else {
+        const filtered = globalProducts.filter(p => p.category === category);
+        displayProducts(filtered);
+    }
+}
+
+const displayProducts = (products) => {
+    const productsContainer = document.getElementById('products-container');
+    productsContainer.innerHTML = '';
+
+    products.forEach(product => {
+        const div = document.createElement('div');
+        div.className = "bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group p-5";
+        div.innerHTML = `
+            <img class="h-48 w-full object-contain mb-4" src="${product.image}">
+            <h3 class="font-bold line-clamp-1">${product.title}</h3>
+            <p class="text-blue-600 font-bold mt-2">$${product.price}</p>
+        `;
+        productsContainer.appendChild(div);
+    });
+}
+
+categoryFilter();
