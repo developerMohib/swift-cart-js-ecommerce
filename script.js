@@ -1,229 +1,217 @@
 
-// trendings products
-const trendingProducts = () => {
-    const url = 'https://fakestoreapi.com/products';
-    const trendingContainer = document.getElementById('trending-products-container');
-    trendingContainer.innerHTML = `
-        <div class="col-span-full flex flex-col items-center justify-center py-20">
-            <span class="loading loading-spinner loading-lg text-primary"></span>       
-            <p class="mt-4 text-gray-500 font-medium">Loading products...</p>
+const API_URL = 'https://fakestoreapi.com/products';
+const DETAILS_PAGE = 'productdetails.html';
+
+const escapeHtml = (str) => {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+};
+
+const showLoading = (containerId) => {
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.innerHTML = `
+      <div class="col-span-full flex flex-col items-center justify-center py-20">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+        <p class="mt-4 text-gray-500 font-medium">Loading products...</p>
+      </div>`;
+  }
+};
+
+const showError = (containerId, message) => {
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.innerHTML = `
+      <div class="col-span-full text-center py-10">
+        <i class="fa-solid fa-circle-exclamation text-error text-3xl"></i>
+        <p class="mt-3 text-gray-600 font-medium">${message}</p>
+        <button onclick="location.reload()" class="btn btn-sm btn-outline mt-4">Retry</button>
+      </div>`;
+  }
+};
+
+const createProductCard = (product) => {
+  return `
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group hover:shadow-lg transition-all duration-300">
+      <div class="bg-gray-100 p-6 relative">
+        <img 
+          class="h-48 w-full object-contain group-hover:scale-105 transition-transform duration-500"
+          src="${escapeHtml(product.image)}" 
+          alt="${escapeHtml(product.title)}"
+          loading="lazy">
+      </div>
+      <div class="p-5">
+        <div class="flex items-center gap-1 mb-3 justify-between">
+        <span class="text-xs font-bold text-gray-700">${product.category}</span>
+       
+          <span class="text-xs font-bold text-gray-700">  <i class="fa-solid fa-star text-yellow-400 text-xs"></i> ${product.rating.rate} <span class="text-gray-400">(${product.rating.count})</span></span>
         </div>
-    `;
-
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            trendingContainer.innerHTML = '';
-            // sort by rating count and get top 4
-            const sorted = data.sort((a, b) => b.rating.count - a.rating.count);
-            const top4 = sorted.slice(0, 4);
-            top4.forEach(product => {
-                console.log('Trending products:', product.rating.count, typeof product.rating.count);
-
-                const trendingDiv = document.createElement('div');
-                trendingDiv.innerHTML = `
- <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group">
-                    <div class="bg-gray-300 p-6 relative">
-                        <img class="h-48 w-full object-contain group-hover:scale-105 transition-transform duration-500"
-                            src=${product.image} alt=${product.title}>
-                    </div>
-
-                    <div class="p-5 border-t border-gray-50">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-blue-600 uppercase">${product.category}</span>
-                            <div class="flex items-center gap-1">
-                                <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                <span class="text-xs font-bold text-gray-700">${product.rating.rate} (${product.rating.count}) </span>
-                            </div>
-                        </div>                            
-                            <h3 class="text-gray-800 font-bold mb-4 line-clamp-1 group-hover:text-blue-600 transition-colors">${product.title}</h3>
-
-                        <div class="mb-5">
-                            <p class="font-bold text-gray-900">Price: $${product.price}</p>
-                        </div>
-
-                        <div class="flex gap-2">
-                            <a href="productdetails.html?id=${product.id}"
-                                class="flex-1 btn btn-ghost btn-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg">
-                                <i class="fa-regular fa-eye"></i> Details
-                            </a>
-                            <button class="flex-1 btn btn-primary btn-sm rounded-lg text-white">
-                                <i class="fa-solid fa-cart-plus"></i> Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
-`
-trendingContainer.appendChild(trendingDiv);
-
-            });
-        })
-        .catch(err => console.log(err));
-}
-trendingProducts();
-
-
-
-const allProducts = () => {
-    const productsContainer = document.getElementById('products-container');
-    productsContainer.innerHTML = `
-        <div class="col-span-full flex flex-col items-center justify-center py-20">
-            <span class="loading loading-spinner loading-lg text-primary"></span>
-            <p class="mt-4 text-gray-500 font-medium">Loading products...</p>
+        <h3 class="text-gray-800 font-bold mb-3 line-clamp-2 min-h-[48px] group-hover:text-blue-600 transition-colors">
+          ${escapeHtml(product.title)}
+        </h3>
+          <p class="text-xl font-bold text-primary mb-4">$${product.price.toFixed(2)}</p>
+        <div class="flex gap-2">
+          <a href="${DETAILS_PAGE}?id=${product.id}" 
+             class="flex-1 btn btn-ghost btn-sm border-gray-300 hover:border-blue-500 hover:text-blue-600 rounded-xl">
+            <i class="fa-regular fa-eye mr-1"></i> View
+          </a>
+          <button onclick="addToCart(${product.id}, '${escapeHtml(product.title)}', ${product.price}, '${escapeHtml(product.image)}')" 
+                  class="flex-1 btn btn-primary btn-sm rounded-xl text-white">
+            <i class="fa-solid fa-cart-plus mr-1"></i> Add
+          </button>
         </div>
-    `;
-    const url = 'https://fakestoreapi.com/products';
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            productsContainer.innerHTML = '';
+      </div>
+    </div>`;
+};
 
-            data.forEach(product => {
-                const productDiv = document.createElement('div');
-                productDiv.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group">
-                    <div class="bg-gray-300 p-6 relative">
-                        <img class="h-48 w-full object-contain group-hover:scale-105 transition-transform duration-500"
-                            src=${product.image} alt=${product.title}>
-                    </div>
 
-                    <div class="p-5 border-t border-gray-50">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-blue-600 uppercase">${product.category}</span>
-                            <div class="flex items-center gap-1">
-                                <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                <span class="text-xs font-bold text-gray-700">${product.rating.rate} (${product.rating.count}) </span>
-                            </div>
-                        </div>                            
-                            <h3 class="text-gray-800 font-bold mb-4 line-clamp-1 group-hover:text-blue-600 transition-colors">${product.title}</h3>
+const showNotification = (message, type = 'info') => {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-end toast-top z-50`;
+  toast.innerHTML = `
+    <div class="alert alert-${type} shadow-lg">
+      <span class="text-sm font-medium">${message}</span>
+    </div>`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+};
 
-                        <div class="mb-5">
-                            <p class="font-bold text-gray-900">Price: $${product.price}</p>
-                        </div>
+const loadTrending = async () => {
+  const container = document.getElementById('trending-products-container');
+  if (!container) return;
+  
+  showLoading('trending-products-container');
+  
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('Failed to fetch');
+    
+    const data = await res.json();
+    const top4 = data
+      .sort((a, b) => b.rating.count - a.rating.count)
+      .slice(0, 4);
+    
+    container.innerHTML = top4.map(p => createProductCard(p)).join('');
+    
+  } catch (err) {
+    console.error('Trending error:', err);
+    showError('trending-products-container', 'Could not load trending products');
+  }
+};
 
-                        <div class="flex gap-2">
-                            <button
-                                class="flex-1 btn btn-ghost btn-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg">
-                                <i class="fa-regular fa-eye"></i> Details
-                            </button>
-                            <button class="flex-1 btn btn-primary btn-sm rounded-lg text-white">
-                                <i class="fa-solid fa-cart-plus"></i> Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                `
-                productsContainer.appendChild(productDiv);
-            });
+let allProductsData = [];
 
-        })
-        .catch(err => console.log(err));
-}
+const loadProducts = async () => {
+  const container = document.getElementById('products-container');
+  const tabsContainer = document.getElementById('categoryTab');
+  
+  if (!container) return;
+  showLoading('products-container');
+  
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('Failed to fetch');
+    
+    allProductsData = await res.json();
+    
+    // Render all products initially
+    renderProducts(allProductsData);
+    
+    // Setup category tabs
+    if (tabsContainer) setupCategoryTabs(tabsContainer);
+    
+  } catch (err) {
+    console.error('Products error:', err);
+    showError('products-container', 'Could not load products');
+  }
+};
 
-allProducts();
+const renderProducts = (products) => {
+  const container = document.getElementById('products-container');
+  if (!container) return;
+  
+  if (products.length === 0) {
+    container.innerHTML = `
+      <div class="col-span-full text-center py-16">
+        <i class="fa-solid fa-box-open text-gray-300 text-4xl"></i>
+        <p class="mt-3 text-gray-500">No products found</p>
+      </div>`;
+    return;
+  }
+  
+  container.innerHTML = products.map(p => createProductCard(p)).join('');
+};
 
-let globalProducts = [];
+const setupCategoryTabs = (tabsContainer) => {
+  // Unique categories using Set (fast!)
+  const categories = [...new Set(allProductsData.map(p => p.category))];
+  
+  // "All" button
+  const allBtn = document.createElement('button');
+  allBtn.className = 'tab tab-active px-5 py-2 rounded-lg font-medium text-sm transition-all';
+  allBtn.textContent = 'All';
+  allBtn.onclick = () => filterByCategory('all', allBtn);
+  tabsContainer.appendChild(allBtn);
+  
+  // Category buttons
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'tab px-5 py-2 rounded-lg font-medium text-sm capitalize transition-all hover:bg-base-200';
+    btn.textContent = cat;
+    btn.onclick = () => filterByCategory(cat, btn);
+    tabsContainer.appendChild(btn);
+  });
+};
 
-const categoryFilter = () => {
-    const url = 'https://fakestoreapi.com/products';
-    const categoryTab = document.getElementById('categoryTab');
-    categoryTab.innerHTML = `
-        <div class="col-span-full flex flex-col items-center justify-center py-20">
-            <span class="loading loading-spinner loading-lg text-primary"></span>
-            <p class="mt-4 text-gray-500 font-medium">Loading products...</p>
-        </div>
-    `;
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            globalProducts = data;
+const filterByCategory = (category, clickedBtn) => {
+  // Update active tab
+  document.querySelectorAll('#categoryTab .tab').forEach(tab => 
+    tab.classList.remove('tab-active'));
+  clickedBtn.classList.add('tab-active');
+  
+  // Filter & render
+  const filtered = category === 'all' 
+    ? allProductsData 
+    : allProductsData.filter(p => p.category === category);
+  
+  renderProducts(filtered);
+  
+  // Smooth scroll to products
+  document.getElementById('products-container')?.scrollIntoView({ 
+    behavior: 'smooth', 
+    block: 'start' 
+  });
+};
 
-            const categories = data.reduce((unique, item) => {
-                if (!unique.includes(item.category)) {
-                    unique.push(item.category);
-                }
-                return unique;
-            }, []);
-            categoryTab.innerHTML = '';
-            // show all prod initially
-            const allBtn = document.createElement('button');
-            allBtn.role = 'tab';
-            allBtn.className = 'tab tab-active px-6 rounded-lg font-medium transition-all duration-300 text-sm';
-            allBtn.innerText = 'All';
-            // pass parameter to filter 
-            allBtn.onclick = (e) => handleFilter('all', e.target);
-            categoryTab.appendChild(allBtn);
 
-            categories.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.role = 'tab';
-                btn.className = 'tab px-6 rounded-lg font-medium transition-all duration-300 text-sm hover:bg-white/50 whitespace-nowrap capitalize';
-                btn.innerText = cat;
-                btn.onclick = (e) => handleFilter(cat, e.target);
-                categoryTab.appendChild(btn);
-            });
-            // call to show all products initially
-            displayProducts(data);
-        })
-        .catch(err => console.log(err));
-}
-
-const handleFilter = (category, targetElement) => {
-    const allTabs = document.querySelectorAll('#categoryTab .tab');
-    allTabs.forEach(tab => tab.classList.remove('tab-active'));
-    targetElement.classList.add('tab-active');
-
-    if (category === 'all') {
-        displayProducts(globalProducts);
+// ============ INITIALIZE ============
+document.addEventListener('DOMContentLoaded', () => {
+  // Load features if elements exist
+  if (document.getElementById('trending-products-container')) loadTrending();
+  if (document.getElementById('products-container')) loadProducts();
+  
+  // Setup search if input exists
+  setupSearch();
+  
+  // Initialize cart badge
+  updateCartBadge();
+  
+  // Auto-hide navbar on scroll (optional UX)
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+    const currentScroll = window.pageYOffset;
+    if (currentScroll > lastScroll && currentScroll > 100) {
+      navbar.classList.add('navbar-hidden');
     } else {
-        const filtered = globalProducts.filter(p => p.category === category);
-        displayProducts(filtered);
+      navbar.classList.remove('navbar-hidden');
     }
-}
+    lastScroll = currentScroll;
+  });
+});
 
-const displayProducts = (products) => {
-    const productsContainer = document.getElementById('products-container');
-    productsContainer.innerHTML = '';
-
-    products.forEach(product => {
-        const div = document.createElement('div');
-        div.className = "bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group";
-        div.innerHTML = `
-                           <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group">
-                    <div class="bg-gray-300 relative">
-                        <img class="h-48 w-full object-contain group-hover:scale-105 transition-transform duration-500"
-                            src=${product.image} alt=${product.title}>
-                    </div>
-
-                    <div class="border-t border-gray-50 p-5">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-blue-600 uppercase">${product.category}</span>
-                            <div class="flex items-center gap-1">
-                                <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                <span class="text-xs font-bold text-gray-700">${product.rating.rate} (${product.rating.count}) </span>
-                            </div>
-                        </div>                            
-                            <h3 class="text-gray-800 font-bold mb-4 line-clamp-1 group-hover:text-blue-600 transition-colors">${product.title}</h3>
-
-                        <div class="mb-5">
-                            <p class="font-bold text-gray-900">Price: $${product.price}</p>
-                        </div>
-
-                        <div class="flex gap-2">
-                            <button
-                                class="flex-1 btn btn-ghost btn-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg">
-                                <i class="fa-regular fa-eye"></i> Details
-                            </button>
-                            <button class="flex-1 btn btn-primary btn-sm rounded-lg text-white">
-                                <i class="fa-solid fa-cart-plus"></i> Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
-        `;
-        productsContainer.appendChild(div);
-    });
-}
-
-categoryFilter();
-
+// Expose functions for HTML onclick attributes
+window.addToCart = addToCart;
+window.filterByCategory = filterByCategory;
