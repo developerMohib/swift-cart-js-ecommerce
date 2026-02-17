@@ -5,5 +5,16 @@
 }
 #headline {
   font-size: 40px;
-  background-color: red;
+  font-weight: bold;
+  text-align: center;
 }
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+.bannerImage {
+  background-image: url("../assets/banner-image.png");
+  background-size: cover;
+  background-position: center;
+} 
