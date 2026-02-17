@@ -3,18 +3,28 @@
   margin: 0;
   box-sizing: border-box;
 }
-#headline {
-  font-size: 40px;
-  font-weight: bold;
-  text-align: center;
-}
-.container {
+
+.myContainer {
   width: 100%;
   max-width: 1200px;
   margin: auto;
+  padding: 0 8px;
 }
 .bannerImage {
   background-image: url("../assets/banner-image.png");
   background-size: cover;
   background-position: center;
+}
+
+
+/* media query */
+@media (max-width: 1024px) {
+  .myContainer {
+    padding: 0 20px;
+  }
+} 
+@media (max-width: 768px) {
+  .myContainer {
+    padding: 0 20px;
+  }
 } 
