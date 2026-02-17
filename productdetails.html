@@ -62,93 +62,147 @@
         </div>
     </nav>
 
-    <!-- Banner -->
-    <header class="relative min-h-[500px] md:min-h-[600px] flex items-center overflow-hidden bg-white">
+  
+    <!-- Product Details Section -->
+    
+ <main class="container mx-auto py-10 px-4">
+    
+    <!-- Loading State -->
+    <div id="loading" class="text-center py-20">
+      <span class="loading loading-spinner loading-lg"></span>
+      <p class="mt-4">Loading product...</p>
+    </div>
 
-        <div class="absolute inset-0 z-0">
-            <img src="./assets/banner-image.png" alt="New Collection" class="w-full h-full object-cover">
+    <!-- Error State -->
+    <div id="error" class="alert alert-error hidden">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>Product not found!</span>
+      <a href="products.html" class="btn btn-sm btn-outline">Back to Products</a>
+    </div>
+
+    <!-- Product Content (Hidden until loaded) -->
+    <div id="product-content" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        
+        <!-- Product Image -->
+        <div class="card bg-base-100 shadow-xl">
+          <figure class="px-4 pt-4">
+            <img 
+              id="product-image" 
+              src="" 
+              alt="Product" 
+              class="rounded-xl w-full h-96 object-cover"
+            />
+          </figure>
+          <!-- Thumbnail Gallery (Optional) -->
+          <div class="card-actions justify-center p-4 flex gap-2">
+            <img src="" class="w-16 h-16 rounded-lg border-2 border-primary cursor-pointer thumbnail active"/>
+            <img src="" class="w-16 h-16 rounded-lg border-2 border-base-300 cursor-pointer thumbnail"/>
+            <img src="" class="w-16 h-16 rounded-lg border-2 border-base-300 cursor-pointer thumbnail"/>
+          </div>
         </div>
 
-        <div class="absolute inset-0 z-10 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
-
-        <div class="myContainer relative z-20">
-            <div class="max-w-2xl">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Best Collection For Your Lifestyle</h1>
-                <p class="text-lg mb-8 text-gray-200">Experience premium quality products curated just for you. Shop the
-                    latest trends with ease and comfort.</p>
-                <button class="btn btn-primary btn-lg rounded-full px-10">Shop Now</button>
+        <!-- Product Info -->
+        <div class="space-y-6">
+          <!-- Category & Rating -->
+          <div class="flex items-center gap-3">
+            <span id="product-category" class="badge badge-outline badge-lg"></span>
+            <div class="rating rating-sm">
+              <i class="fa-solid fa-star text-yellow-400"></i>
+              <span id="product-rating" class="ml-2 font-medium"></span>
+              <span class="text-base-content/60" id="product-reviews">(0 reviews)</span>
             </div>
+          </div>
+
+          <!-- Title & Price -->
+          <h1 id="product-name" class="text-4xl font-bold"></h1>
+          <p id="product-price" class="text-3xl font-bold text-primary"></p>
+
+          <!-- Description -->
+          <p id="product-description" class="text-base-content/80 leading-relaxed"></p>
+
+          <!-- Features -->
+          <div>
+            <h3 class="font-semibold mb-2">Key Features:</h3>
+            <ul id="product-features" class="list-disc list-inside space-y-1 text-base-content/70">
+              <!-- Features injected by JS -->
+            </ul>
+          </div>
+
+          <!-- Stock Status -->
+          <div id="stock-status" class="flex items-center gap-2">
+            <i class="fa-solid fa-circle text-success"></i>
+            <span class="text-success font-medium">In Stock</span>
+          </div>
+
+          <!-- Quantity & Add to Cart -->
+          <div class="flex items-center gap-4">
+            <div class="join">
+              <button class="join-item btn btn-square" onclick="updateQuantity(-1)">−</button>
+              <input 
+                id="quantity" 
+                type="number" 
+                value="1" 
+                min="1" 
+                max="10" 
+                class="join-item input input-bordered w-16 text-center"
+              />
+              <button class="join-item btn btn-square" onclick="updateQuantity(1)">+</button>
+            </div>
+            <button id="add-to-cart" class="btn btn-primary btn-lg flex-1">
+              <i class="fa-solid fa-cart-plus mr-2"></i>
+              Add to Cart
+            </button>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3">
+            <button class="btn btn-outline flex-1">
+              <i class="fa-regular fa-heart mr-2"></i> Wishlist
+            </button>
+            <button class="btn btn-outline flex-1">
+              <i class="fa-solid fa-share mr-2"></i> Share
+            </button>
+          </div>
         </div>
-    </header>
+      </div>
 
-    <!-- Why Choose Us -->
-    <section class="py-20">
-        <div class="myContainer">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl text-black font-bold mb-4">Why Choose Us?</h2>
-                <p class="text-gray-600">We are committed to providing the best shopping experience with quality,
-                    service, and value.</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative group hover:-translate-y-2 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-blue-600 text-white rounded-xl flex items-center justify-center text-2xl absolute -top-7 left-8 shadow-lg">
-                        <i class="fa-solid fa-truck-fast"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mt-4 mb-2 text-black">Fast Delivery</h3>
-                    <p class="text-sm text-gray-600">Official logistics support for quick and safe delivery to your
-                        doorstep.</p>
-                </div>
-
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative group hover:-translate-y-2 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-green-500 text-white rounded-xl flex items-center justify-center text-2xl absolute -top-7 left-8 shadow-lg">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mt-4 mb-2 text-black">Secure Payment</h3>
-                    <p class="text-sm text-gray-600">We ensure your transactions are encrypted and 100% secure.</p>
-                </div>
-
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative group hover:-translate-y-2 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-orange-500 text-white rounded-xl flex items-center justify-center text-2xl absolute -top-7 left-8 shadow-lg">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mt-4 mb-2 text-black">24/7 Support</h3>
-                    <p class="text-sm text-gray-600">Our team is always here to help you with any queries anytime.</p>
-                </div>
-
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative group hover:-translate-y-2 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-purple-500 text-white rounded-xl flex items-center justify-center text-2xl absolute -top-7 left-8 shadow-lg">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mt-4 mb-2 text-black">Easy Returns</h3>
-                    <p class="text-sm text-gray-600">Hassle-free 7-day return policy for a better shopping experience.
-                    </p>
-                </div>
-            </div>
+      <!-- Tabs: Description / Reviews -->
+      <div class="mt-16">
+        <div role="tablist" class="tabs tabs-boxed">
+          <a role="tab" class="tab tab-active" onclick="switchTab('description')">Description</a>
+          <a role="tab" class="tab" onclick="switchTab('reviews')">Reviews (<span id="review-count">0</span>)</a>
         </div>
-    </section>
-
-    <!-- Trending now products -->
-    <section class="py-10 bg-gray-100">
-        <div class="myContainer">
-            <div class="mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-black">Trending Now</h2>
-            </div>
-
-            <div id="trending-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-               
-            </div>
+        
+        <!-- Description Tab -->
+        <div id="tab-description" class="card bg-base-100 shadow-xl mt-4 p-6">
+          <p id="full-description" class="leading-relaxed"></p>
         </div>
-    </section>
+        
+        <!-- Reviews Tab (Hidden by default) -->
+        <div id="tab-reviews" class="hidden card bg-base-100 shadow-xl mt-4 p-6">
+          <div id="reviews-list" class="space-y-4">
+            <!-- Reviews injected by JS -->
+          </div>
+          <div class="mt-6">
+            <h4 class="font-semibold mb-3">Write a Review</h4>
+            <textarea class="textarea textarea-bordered w-full" placeholder="Your review..."></textarea>
+            <button class="btn btn-primary mt-3">Submit Review</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products -->
+      <div class="mt-16">
+        <h2 class="text-2xl font-bold mb-6">You May Also Like</h2>
+        <div id="related-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Related products injected by JS -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-gray-300 pt-20 pb-10">
