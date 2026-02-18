@@ -37,26 +37,26 @@ const createProductCard = (product) => {
       <div class="bg-gray-100 p-6 relative">
         <img 
           class="h-48 w-full object-contain group-hover:scale-105 transition-transform duration-500"
-          src="${escapeHtml(product.image)}" 
-          alt="${escapeHtml(product.title)}"
+          src="${product.image}" 
+          alt="${product.title}"
           loading="lazy">
       </div>
       <div class="p-5">
         <div class="flex items-center gap-1 mb-3 justify-between">
-        <span class="text-xs font-bold text-gray-700">${product.category}</span>
+        <span class="text-xs font-bold text-gray-700 bg-blue-100 px-2 py-1 rounded-full capitalize">${product.category}</span>
        
           <span class="text-xs font-bold text-gray-700">  <i class="fa-solid fa-star text-yellow-400 text-xs"></i> ${product.rating.rate} <span class="text-gray-400">(${product.rating.count})</span></span>
         </div>
-        <h3 class="text-gray-800 font-bold mb-3 line-clamp-2 min-h-[48px] group-hover:text-blue-600 transition-colors">
-          ${escapeHtml(product.title)}
+        <h3 class="text-gray-800 font-bold mb-3 truncate">
+          ${product.title}
         </h3>
-          <p class="text-xl font-bold text-primary mb-4">$${product.price.toFixed(2)}</p>
+          <p class="text-xl font-bold text-gray-800 mb-4">$${product.price}</p>
         <div class="flex gap-2">
           <a href="${DETAILS_PAGE}?id=${product.id}" 
              class="flex-1 btn btn-ghost btn-sm border-gray-300 hover:border-blue-500 hover:text-blue-600 rounded-xl">
-            <i class="fa-regular fa-eye mr-1"></i> View
+            <i class="fa-regular fa-eye mr-1"></i> Details
           </a>
-          <button onclick="addToCart(${product.id}, '${escapeHtml(product.title)}', ${product.price}, '${escapeHtml(product.image)}')" 
+          <button onclick="addToCart(${product.id}, '${product.title}', ${product.price}, '${product.image}')" 
                   class="flex-1 btn btn-primary btn-sm rounded-xl text-white">
             <i class="fa-solid fa-cart-plus mr-1"></i> Add
           </button>
@@ -149,7 +149,7 @@ const setupCategoryTabs = (tabsContainer) => {
   
   // "All" button
   const allBtn = document.createElement('button');
-  allBtn.className = 'tab tab-active px-5 py-2 rounded-lg font-medium text-sm transition-all';
+  allBtn.className = 'tab tab-active px-5 py-2 rounded-lg font-medium text-sm transition-all border border-gray-300';
   allBtn.textContent = 'All';
   allBtn.onclick = () => filterByCategory('all', allBtn);
   tabsContainer.appendChild(allBtn);
@@ -157,7 +157,7 @@ const setupCategoryTabs = (tabsContainer) => {
   // Category buttons
   categories.forEach(cat => {
     const btn = document.createElement('button');
-    btn.className = 'tab px-5 py-2 rounded-lg font-medium text-sm capitalize transition-all hover:bg-base-200';
+    btn.className = 'tab px-5 py-2 rounded-lg font-medium text-sm capitalize transition-all hover:bg-base-200 border border-gray-300';
     btn.textContent = cat;
     btn.onclick = () => filterByCategory(cat, btn);
     tabsContainer.appendChild(btn);
@@ -185,31 +185,10 @@ const filterByCategory = (category, clickedBtn) => {
 };
 
 
-// ============ INITIALIZE ============
 document.addEventListener('DOMContentLoaded', () => {
   // Load features if elements exist
   if (document.getElementById('trending-products-container')) loadTrending();
   if (document.getElementById('products-container')) loadProducts();
-  
-  // Setup search if input exists
-  setupSearch();
-  
-  // Initialize cart badge
-  updateCartBadge();
-  
-  // Auto-hide navbar on scroll (optional UX)
-  let lastScroll = 0;
-  window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (!navbar) return;
-    const currentScroll = window.pageYOffset;
-    if (currentScroll > lastScroll && currentScroll > 100) {
-      navbar.classList.add('navbar-hidden');
-    } else {
-      navbar.classList.remove('navbar-hidden');
-    }
-    lastScroll = currentScroll;
-  });
 });
 
 // Expose functions for HTML onclick attributes
